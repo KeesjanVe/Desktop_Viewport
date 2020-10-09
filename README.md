@@ -2,7 +2,7 @@
 Create a view-port (form) that can be shared with MS Teams
 
 Install VCL (https://www.videolan.org/)
-Start the application, position and size the form to your needs.
+Start this (DesktopViewport.exe) application, position and size the form to your needs.
 Hit the button, the form will become transparent and a new (VCL) window will open.
 The transparent form can not be sized or moved any more!
 
