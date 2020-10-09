@@ -6,7 +6,7 @@ Start this (DesktopViewport.exe) application, position and size the form to your
 Hit the button, the form will become transparent and a new (VCL) window will open.
 The transparent form can not be sized or moved any more!
 
-The underlying part of the transparent form will be shown in the new VCL form/window and kan be shared with e.g. MS Teams.
+The underlying part of the transparent form will be shown in the new VCL form/window that can be shared with e.g. MS Teams.
 Select 'Window sharing' in Teams and not 'Desktop sharing' and share the new VCL window.
 If insisting on sharing the desktop maximize the VCL window and share the desktop covered with the VCL window.
 When dragging other forms/windows underneath the 'view-port' only the part covered by the view-port is shared/visible for the attendees.
