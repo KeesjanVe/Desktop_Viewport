@@ -1,12 +1,14 @@
 object Form1: TForm1
-  Left = 450
-  Top = 311
-  Width = 553
-  Height = 405
-  BorderIcons = [biSystemMenu]
+  Left = 707
+  Top = 523
+  BorderIcons = []
+  BorderStyle = bsNone
   Caption = 'Desktop Viewport'
+  ClientHeight = 261
+  ClientWidth = 213
   Color = clBtnFace
-  Constraints.MinWidth = 100
+  Constraints.MinHeight = 250
+  Constraints.MinWidth = 145
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -105,16 +107,124 @@ object Form1: TForm1
     0000000000000000000000000000000000000000000000000000000000000000
     0000000000000000000000000000}
   OldCreateOrder = False
+  OnActivate = FormActivate
   OnCreate = FormCreate
+  OnMouseDown = FormMouseDown
+  OnMouseMove = FormMouseMove
+  OnMouseUp = FormMouseUp
+  OnPaint = FormPaint
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Button1: TButton
-    Left = 32
-    Top = 24
-    Width = 97
-    Height = 25
+    Left = 21
+    Top = 4
+    Width = 100
+    Height = 24
     Caption = 'Create viewport'
     TabOrder = 0
     OnClick = Button1Click
+  end
+  object GroupBox1: TGroupBox
+    Left = 8
+    Top = 34
+    Width = 121
+    Height = 151
+    Caption = 'Settings'
+    Color = clBtnFace
+    ParentColor = False
+    TabOrder = 1
+    object Label1: TLabel
+      Left = 7
+      Top = 24
+      Width = 22
+      Height = 13
+      Caption = 'Top:'
+    end
+    object Label2: TLabel
+      Left = 7
+      Top = 48
+      Width = 21
+      Height = 13
+      Caption = 'Left:'
+    end
+    object Label3: TLabel
+      Left = 7
+      Top = 72
+      Width = 31
+      Height = 13
+      Caption = 'Width:'
+    end
+    object Label4: TLabel
+      Left = 7
+      Top = 96
+      Width = 34
+      Height = 13
+      Caption = 'Height:'
+    end
+    object Button2: TButton
+      Tag = 1
+      Left = 34
+      Top = 120
+      Width = 75
+      Height = 25
+      Caption = 'Apply'
+      TabOrder = 0
+      OnClick = Button2Click
+    end
+    object RzNumericTop: TRzNumericEdit
+      Left = 43
+      Top = 20
+      Width = 65
+      Height = 21
+      FrameHotStyle = fsFlat
+      FrameVisible = True
+      TabOrder = 1
+      DisplayFormat = '0'
+    end
+    object RzNumericLeft: TRzNumericEdit
+      Left = 43
+      Top = 44
+      Width = 65
+      Height = 21
+      FrameHotStyle = fsFlat
+      FrameVisible = True
+      TabOrder = 2
+      DisplayFormat = '0'
+    end
+    object RzNumericWidth: TRzNumericEdit
+      Left = 43
+      Top = 68
+      Width = 65
+      Height = 21
+      FrameHotStyle = fsFlat
+      FrameVisible = True
+      TabOrder = 3
+      Max = 145
+      Min = 145
+      DisplayFormat = '0'
+    end
+    object RzNumericHeight: TRzNumericEdit
+      Left = 43
+      Top = 92
+      Width = 65
+      Height = 21
+      FrameHotStyle = fsFlat
+      FrameVisible = True
+      TabOrder = 4
+      Max = 250
+      Min = 250
+      DisplayFormat = '0'
+    end
+  end
+  object Button3: TButton
+    Left = 130
+    Top = 226
+    Width = 75
+    Height = 25
+    Anchors = [akRight, akBottom]
+    Caption = 'Close'
+    TabOrder = 2
+    OnClick = Button3Click
   end
 end

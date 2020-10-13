@@ -3,25 +3,60 @@ unit Unit1;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, graphics, Controls, Forms,
-  StdCtrls, ShellApi;
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  StdCtrls, fcStatusBar, Mask, RzEdit, RzButton,ShellApi;
 
 type
   TForm1 = class(TForm)
     Button1: TButton;
+    GroupBox1: TGroupBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Button2: TButton;
+    RzNumericTop: TRzNumericEdit;
+    RzNumericLeft: TRzNumericEdit;
+    RzNumericWidth: TRzNumericEdit;
+    RzNumericHeight: TRzNumericEdit;
+    Button3: TButton;
     procedure Button1Click(Sender: TObject);
+    procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure FormMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure FormMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure FormActivate(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormPaint(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+  protected
+    procedure CreateParams(var Params: TCreateParams); override;
+ procedure WMNCHitTest(var Message: TWMNCHitTest); message WM_NCHITTEST;    
   private
     { Private declarations }
-  screenleft, screenwidth,screenheight,screentop: integer;
-  Start: Integer;
-  procedure NoMove(var Msg: TWMWindowPosChanging); message WM_WINDOWPOSChanging;
+    screenleft, screenwidth,screenheight,screentop: integer;
+    Start: Integer;
+    Stop: Boolean;
+    procedure WMNCPaint(var Msg: TWMNCPaint); message WM_NCPAINT;
+    procedure FormFrame;
+    procedure WMNCActivate(var Msg: TWMNCActivate); message WM_NCACTIVATE;
+    procedure WMSize(var Msg: TWMSize); message WM_SIZE;
+    procedure NoMove(var Msg: TWMWindowPosChanging); message WM_WINDOWPOSChanging;
+    procedure WMEnterSizeMove(var Message: TMessage) ; message WM_ENTERSIZEMOVE;
+    procedure WMMove(var Message: TMessage) ; message WM_MOVE;
+    procedure WMExitSizeMove(var Message: TMessage) ; message WM_EXITSIZEMOVE;
   public
     { Public declarations }
   end;
 
 var
   Form1: TForm1;
+  isDraging: boolean;
+X0, Y0: single;
 
 implementation
 
@@ -40,25 +75,32 @@ var
   Fault :Integer;
   ExitCode: DWORD;
 begin
-    xxx := Createrectrgn(0,0,width,height);
-    xxy := CreateRectRgn(width-clientwidth-5, height-clientheight-6, ClientWidth+6, ClientHeight+27);
-    combinergn(xxx,xxy,xxx, rgn_xor);
-    deleteObject(xxy);
+  xxx := Createrectrgn(0,0,width,height);
+  xxy := CreateRectRgn(2,2,ClientWidth-2,ClientHeight-2);
+  combinergn(xxx,xxy,xxx, rgn_xor);
+  deleteObject(xxy);
   SetWindowRgn (handle, xxx, true);
-//  SetWindowPos(Form1.Handle, HWND_TOPMOST, 0, 0, 0, 0,SWP_NoMove or SWP_NoSize);
-
 
   button1.Visible := false;
-  form1.Color := clRed;
+  Button3.Visible := False;
+  GroupBox1.Visible := False;
+  
   refresh;
-  screenleft:= Form1.left+ width-clientwidth-5;
-  screenwidth := ClientWidth-5;
-  screenheight:= clientheight-5;
-  screentop :=  Form1.top + height-clientheight-6;
+  application.processmessages;
+  stop := True;
+
+  screentop := Form1.Top+2;
+  screenleft:= Form1.left+2;
+
+  screenwidth := Form1.ClientWidth-3;
+  screenheight:= Form1.ClientHeight-3;
+
+
   Fault := 0;
   Start := 1;
   WorkingDirP := pchar(ExtractFilePath(Application.ExeName));
-  CmdLine := format('vlc.exe --qt-minimal-view --no-autoscale screen:// :screen-fps=5.000000 :live-caching=1 :screen-left=%d :screen-width=%d :screen-height=%d :screen-top=%d',[screenleft, screenwidth, screenheight, screentop]);
+  CmdLine := format('vlc.exe --qt-minimal-view --no-autoscale screen:// :screen-fps=5.000000 :live-caching=1 :screen-top=%d :screen-left=%d :screen-width=%d :screen-height=%d',[screentop, screenleft, screenwidth, screenheight]);
+//      showmessage(CmdLine);
   ZeroMemory(@StartupInfo, SizeOf(StartupInfo));
   StartupInfo.cb := SizeOf(StartupInfo);
   StartupInfo.dwFlags := STARTF_USESHOWWINDOW or STARTF_FORCEONFEEDBACK;
@@ -108,6 +150,130 @@ if not CreateProcess(nil,
       until (ExitCode <> STILL_ACTIVE)
     end;
   end;
+ stop := True;
+end;
+
+procedure TForm1.CreateParams(var Params: TCreateParams);
+begin
+ BorderStyle := bsNone;
+ inherited;
+// Params.ExStyle := Params.ExStyle or WS_EX_STATICEDGE;
+// Params.Style := Params.Style or WS_SIZEBOX;
+
+end;
+
+procedure TForm1.FormMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  isDraging := True;
+  X0 := X;
+  Y0 := Y;
+end;
+
+procedure TForm1.FormMouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+begin
+   if isDraging then
+  begin
+    Form1.Left := Trunc(Form1.Left + X - X0);
+    Form1.Top := Trunc(Form1.Top + Y - Y0);
+  end;
+end;
+
+procedure TForm1.FormMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  isDraging := False;
+end;
+
+procedure TForm1.WMNCHitTest(var Message: TWMNCHitTest);
+const
+  EDGEDETECT = 7; // adjust
+var
+  deltaRect: TRect;
+begin
+  inherited;
+  if BorderStyle = bsNone then
+    with Message, deltaRect do
+    begin
+      Left := XPos - BoundsRect.Left;
+      Right := BoundsRect.Right - XPos;
+      Top := YPos - BoundsRect.Top;
+      Bottom := BoundsRect.Bottom - YPos;
+      if (Top < EDGEDETECT) and (Left < EDGEDETECT) then
+        Result := HTTOPLEFT
+      else if (Top < EDGEDETECT) and (Right < EDGEDETECT) then
+        Result := HTTOPRIGHT
+      else if (Bottom < EDGEDETECT) and (Left < EDGEDETECT) then
+        Result := HTBOTTOMLEFT
+      else if (Bottom < EDGEDETECT) and (Right < EDGEDETECT) then
+        Result := HTBOTTOMRIGHT
+      else if (Top < EDGEDETECT) then
+        Result := HTTOP
+      else if (Left < EDGEDETECT) then
+        Result := HTLEFT
+      else if (Bottom < EDGEDETECT) then
+        Result := HTBOTTOM
+      else if (Right < EDGEDETECT) then
+        Result := HTRIGHT
+    end;
+end;
+
+
+
+procedure TForm1.WMNCPaint(var Msg: TWMNCPaint);
+begin
+  inherited;
+  if not stop then FormFrame;
+end;
+
+procedure TForm1.FormFrame;
+var
+  dc: hDc;
+  Pen: hPen;
+  OldPen: hPen;
+  OldBrush: hBrush;
+begin
+  if stop then exit;
+  dc := GetWindowDC(Handle);
+
+  canvas.brush.color := clBtnFace;
+  Canvas.fillrect(Canvas.ClipRect);
+//  PatBlt(Canvas.Handle, 0, 0, ClientWidth, ClientHeight,WHITENESS	);
+
+  Pen := CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
+  OldPen := SelectObject(dc, Pen);
+  OldBrush := SelectObject(dc, GetStockObject(NULL_BRUSH));
+  Rectangle(dc, 0, 0, Form1.Width, Form1.Height);
+  SelectObject(dc, OldBrush);
+  SelectObject(dc, OldPen);
+  DeleteObject(Pen);
+  ReleaseDC(Handle, Canvas.Handle);
+end;
+
+procedure TForm1.WMNCActivate(var Msg: TWMNCActivate);
+begin
+  inherited;
+  if not stop then FormFrame;
+end;
+
+procedure TForm1.WMSize(var Msg: TWMSize);
+begin
+  inherited;
+  if not stop then FormFrame;
+end;
+
+procedure TForm1.FormActivate(Sender: TObject);
+begin
+  Button2.tag := 0;
+  application.processmessages;
+  sendmessage(Self.handle,WM_Size, 0,0);
+  Stop := False;
+end;
+
+procedure TForm1.Button3Click(Sender: TObject);
+begin
+  close;
 end;
 
 procedure TForm1.NoMove(var Msg: TWMWindowPosChanging);
@@ -119,9 +285,73 @@ begin
                           SWP_NOZORDER;
 end;
 
+procedure TForm1.WMEnterSizeMove(var Message: TMessage);
+begin
+  inherited;
+end;
+
+procedure TForm1.WMExitSizeMove(var Message: TMessage);
+var x: Integer;
+begin
+  if ClientWidth < 137 then
+    ClientWidth := 137;
+  RzNumericWidth.Value := ClientWidth-4;
+
+  if ClientHeight < 223 then
+    ClientHeight := 223;
+  RzNumericHeight.Value := clientheight-4;
+
+  RzNumericLeft.Value := Form1.left+2;
+  RzNumericTop.Value := Form1.Top+2;
+
+  for x := 0 to Form1.ControlCount-1 do
+    controls[x].repaint;
+
+  for x := 0 to GroupBox1.ControlCount-1 do
+    GroupBox1.controls[x].repaint;
+end;
+
+procedure TForm1.WMMove(var Message: TMessage);
+begin
+   if Button2.tag = 1 then exit;
+  RzNumericWidth.Value := ClientWidth-4;
+  RzNumericHeight.Value := clientheight-4;
+  RzNumericLeft.Value := TWMMove(Message).XPos+2;
+  RzNumericTop.Value := TWMMove(Message).YPos+2;
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+begin
+  Button2.tag := 1;
+  try
+    Form1.left := trunc(RzNumericLeft.Value)-2;
+    Form1.top  := trunc(RzNumericTop.Value)-2;
+    ClientWidth := trunc(RzNumericWidth.value)+4;
+    clientheight := Trunc(RzNumericHeight.value)+4;
+  finally
+  Button2.tag := 0;
+  repaint;
+  end;
+end;
+
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   Start := 0;
+end;
+
+procedure TForm1.FormPaint(Sender: TObject);
+begin
+  if not stop then FormFrame;
+  inherited;
+end;
+
+procedure TForm1.FormShow(Sender: TObject);
+begin
+  RzNumericWidth.Value := ClientWidth-4;
+  RzNumericHeight.Value := clientheight-4;
+  RzNumericLeft.Value := Form1.left+2;
+  RzNumericTop.Value := Form1.Top+2;
+
 end;
 
 end.

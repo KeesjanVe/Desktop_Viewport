@@ -15,8 +15,8 @@ M=0
 N=1
 O=1
 P=1
-Q=1
-R=1
+Q=0
+R=0
 S=0
 T=0
 U=0
@@ -58,8 +58,8 @@ RootDir=
 [Version Info]
 IncludeVerInfo=1
 AutoIncBuild=0
-MajorVer=0
-MinorVer=1
+MajorVer=1
+MinorVer=0
 Release=0
 Build=0
 Debug=0
@@ -71,14 +71,17 @@ Locale=1033
 CodePage=1252
 [Version Info Keys]
 CompanyName=U&I Learning Netherlands BV
-FileDescription=Desktop viewport for sreen sharing
-FileVersion=0.1.0.0
-InternalName=
-LegalCopyright=www.unilearning.com
+FileDescription=Create a desktop viewport for screen sharing
+FileVersion=1.0.0.0
+InternalName=Desktop Viewport
+LegalCopyright=U&I Learning Netherlands BV
 LegalTrademarks=
 OriginalFilename=
-ProductName=
-ProductVersion=0.1.0.0
-Comments=
+ProductName=No license!
+ProductVersion=1.0.0.0
+Comments=No license!
 [Excluded Packages]
 $(DELPHI)\Projects\Bpl\pkgUNI.bpl=(untitled)
+[HistoryLists\hlUnitAliases]
+Count=1
+Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
