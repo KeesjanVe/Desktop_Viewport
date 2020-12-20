@@ -15,14 +15,11 @@ For defining the view-port location and size command line parameters can be used
 The following command line parameters are available:
 Top: 	-T x
 Left: 	-L x
-Right:	-R x
-Bottom:	-B x
 Width:	-W x
 Height:	-H x
 
-Width and Height have priority over Right and bottom.
-Default width = 146 pixels, Width/Right-Left can not be smaller than 146 pixels
-Default Height = 261 pixels, Height/Bottom-Top can not be smaller than 261 pixels
+Default width = 140 pixels, Width can not be smaller than 140 pixels
+Default Height = 250 pixels, Height can not be smaller than 250 pixels
 The parameters and their calculation may not be entirely foolproof!
 
 Example: DesktopViewport.exe -T 0 -L 0 -W 1024 -H 768

@@ -61,7 +61,7 @@ AutoIncBuild=0
 MajorVer=2
 MinorVer=0
 Release=0
-Build=0
+Build=2
 Debug=0
 PreRelease=0
 Special=0
@@ -72,13 +72,13 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=U&I Learning Netherlands BV
 FileDescription=Create a desktop viewport for screen sharing
-FileVersion=2.0.0.0
+FileVersion=2.0.0.2
 InternalName=Desktop Viewport
 LegalCopyright=U&I Learning Netherlands BV
 LegalTrademarks=
 OriginalFilename=
 ProductName=No license!
-ProductVersion=2.0.0.0
+ProductVersion=2.0.0.2
 Comments=No license!
 [Excluded Packages]
 $(DELPHI)\Projects\Bpl\pkgUNI.bpl=(untitled)

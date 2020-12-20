@@ -76,8 +76,11 @@ var
   Fault :Integer;
   ExitCode: DWORD;
 begin
+// monitor?
+
   xxx := Createrectrgn(0,0,width,height);
   xxy := CreateRectRgn(2,2,ClientWidth-2,ClientHeight-2);
+
   combinergn(xxx,xxy,xxx, rgn_xor);
   deleteObject(xxy);
   SetWindowRgn (handle, xxx, true);
@@ -85,23 +88,22 @@ begin
   button1.Visible := false;
   Button3.Visible := False;
   GroupBox1.Visible := False;
-  
+
   refresh;
   application.processmessages;
   stop := True;
 
-  screentop := Form1.Top+2;
-  screenleft:= Form1.left+2;
-
-  screenwidth := Form1.ClientWidth-3;
-  screenheight:= Form1.ClientHeight-3;
-
+  screentop := Form1.Top +2;
+  screentop := abs(screentop - screen.DesktopTop);
+  screenleft:= Form1.left +2;
+  screenleft := abs(screenleft - screen.DesktopLeft);
+  screenwidth := Form1.ClientWidth-4;
+  screenheight:= Form1.ClientHeight-4;
 
   Fault := 0;
   Start := 1;
   WorkingDirP := pchar(ExtractFilePath(Application.ExeName));
   CmdLine := format('vlc.exe --qt-minimal-view --no-autoscale screen:// :screen-fps=5.000000 :live-caching=1 :screen-top=%d :screen-left=%d :screen-width=%d :screen-height=%d',[screentop, screenleft, screenwidth, screenheight]);
-//      showmessage(CmdLine);
   ZeroMemory(@StartupInfo, SizeOf(StartupInfo));
   StartupInfo.cb := SizeOf(StartupInfo);
   StartupInfo.dwFlags := STARTF_USESHOWWINDOW or STARTF_FORCEONFEEDBACK;
@@ -221,8 +223,6 @@ begin
     end;
 end;
 
-
-
 procedure TForm1.WMNCPaint(var Msg: TWMNCPaint);
 begin
   inherited;
@@ -318,7 +318,7 @@ procedure TForm1.WMMove(var Message: TMessage);
 begin
    if Button2.tag = 1 then exit;
   RzNumericWidth.Value := ClientWidth-4;
-  RzNumericHeight.Value := clientheight-4;
+  RzNumericHeight.Value := ClientHeight-4;
   RzNumericLeft.Value := TWMMove(Message).XPos+2;
   RzNumericTop.Value := TWMMove(Message).YPos+2;
 
@@ -342,62 +342,58 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 var
   i: Integer;
-  T, L, R, B, W, H : integer;
+  T, L, W, H : integer;
   Fault: String;
 begin
   Start := 0;
-  Self.top := (Screen.Height div 2) - 144;
+
+  Self.top := (Screen.Height div 2) - 125;
   T := Self.top;
-  Self.Left := (Screen.Width div 2) - 74;
+  Self.Left := (Screen.Width div 2) - 73;
   L:= Self.Left;
-
-  W:= 146;
-  H:= 261;
-  R := Self.Left + 146;
-  B := Self.Top + 288;
-  for i := 1 to ParamCount do
+  W := Self.Width;
+  H := Self.Height;
+  if ParamCount > 1 then
   begin
-    try
-      Fault := '-T';
-      if ParamStr(i) = '-T' then T := StrToInt(ParamStr(i+1));
-      Fault := '-L';
-      if ParamStr(i) = '-L' then L := StrToInt(ParamStr(i+1));
-      Fault := '-R';
-      if ParamStr(i) = '-R' then R := StrToInt(ParamStr(i+1));
-      Fault := '-B';
-      if ParamStr(i) = '-B' then B := StrToInt(ParamStr(i+1));
-      Fault := '-W';
-      if ParamStr(i) = '-W' then W := StrToInt(ParamStr(i+1));
-      Fault := '-H';
-      if ParamStr(i) = '-H' then H := StrToInt(ParamStr(i+1));
-    except
-    Begin
-      Showmessage('Wrong parameter value for parameter: '+Fault +' ' +ParamStr(i+1));
-      exit;
+
+    W:= 146;
+    H:= 261;
+    for i := 1 to ParamCount do
+    begin
+      try
+        Fault := '-T';
+        if ParamStr(i) = '-T' then T := StrToInt(ParamStr(i+1));
+        Fault := '-L';
+        if ParamStr(i) = '-L' then L := StrToInt(ParamStr(i+1));
+        Fault := '-W';
+        if ParamStr(i) = '-W' then W := StrToInt(ParamStr(i+1));
+        Fault := '-H';
+        if ParamStr(i) = '-H' then H := StrToInt(ParamStr(i+1));
+      except
+      Begin
+        Showmessage('Wrong parameter value for parameter: '+Fault +' ' +ParamStr(i+1));
+        exit;
+      end;
+      end;
     end;
-    end;
+      try
+
+        if (W < 140) then Raise exception.create('Parameter value for parameter: -W '+IntToStr(W)+ 'is to small: min value = 140');
+        if (H < 250) then Raise exception.create('Parameter value for parameter: -H '+IntToStr(H)+ ' is to small: min value = 250');
+      except
+        raise;
+     end;
+     if FindCmdLineSwitch('T', ['-'], false) then Self.Top := T-2;
+     if FindCmdLineSwitch('L', ['-'], false) then Self.Left := L-2;
+
+     if FindCmdLineSwitch('W', ['-'], false) then Self.Width := W+4;
+     if FindCmdLineSwitch('H', ['-'], false) then Self.Height := H+4;
+  end
+  else
+  begin
+    Self.Height := 254;
+    Self.Width  := 144;
   end;
-    try
-{      if (T < 0) then Raise exception.create('Negative parameter value for parameter: -T '+IntToStr(T));
-      if (L < 0) then Raise exception.create('Negative parameter value for parameter: -L '+IntToStr(L));
-      if (R < 0) then Raise exception.create(Format('Negative parameter value for parameter: -R %d',[R]));
-      if (B < 0) then Raise exception.create(Format('Negative parameter value for parameter: -B %d',[B]));
-}
-      if (W < 146) then Raise exception.create('Parameter value for parameter: -W '+IntToStr(W)+ 'is to small: min value = 146');
-      if (H < 261) then Raise exception.create('Parameter value for parameter: -H '+IntToStr(H)+ ' is to small: min value = 261');
-      if (R-L < 146) then Raise exception.create(Format('Parameter value for parameters: -R - -L (%d - %d < min width: 146)',[R, L]));
-      if (B-T < 261) then Raise exception.create(Format('Parameter value for parameters: -B - -T (%d - %d < min height: 261)',[B, T]));
-    except
-      raise;
-   end;
-   if FindCmdLineSwitch('T', ['-'], false) then Self.Top := T-2;
-   if FindCmdLineSwitch('L', ['-'], false) then Self.Left := L-2;
-
-   if FindCmdLineSwitch('R', ['-'], false) then Self.Width := (R - L) + 4;
-   if FindCmdLineSwitch('B', ['-'], false) then Self.Height := (B - T) +4;
-
-   if FindCmdLineSwitch('W', ['-'], false) then Self.Width := W+4;
-   if FindCmdLineSwitch('H', ['-'], false) then Self.Height := H+4;
 end;
 
 procedure TForm1.FormPaint(Sender: TObject);

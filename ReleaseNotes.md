@@ -1,3 +1,9 @@
+Version 2.0.0.2
+Changes:
+- Removed command line parameters '-R' and '-B' due to incorrect results and a 'black' VCL screen.
+- Default viewport Width = 140 pixels and Height = 250 pixels
+- Compensate for a main monitor on the right hand side
+
 Version 2.0.0.1
 Changes:
 - Removed command line check for negative values for Top, Left, Right and Bottom.

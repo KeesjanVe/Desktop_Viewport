@@ -3,11 +3,11 @@ object Form1: TForm1
   Top = 331
   BorderStyle = bsNone
   Caption = 'Desktop Viewport'
-  ClientHeight = 261
-  ClientWidth = 138
+  ClientHeight = 227
+  ClientWidth = 136
   Color = clBtnFace
-  Constraints.MinHeight = 250
-  Constraints.MinWidth = 145
+  Constraints.MinHeight = 254
+  Constraints.MinWidth = 144
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -218,8 +218,8 @@ object Form1: TForm1
     end
   end
   object Button3: TButton
-    Left = 33
-    Top = 226
+    Left = 31
+    Top = 192
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
