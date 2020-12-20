@@ -1,11 +1,10 @@
 object Form1: TForm1
-  Left = 707
-  Top = 523
-  BorderIcons = []
+  Left = 1031
+  Top = 331
   BorderStyle = bsNone
   Caption = 'Desktop Viewport'
   ClientHeight = 261
-  ClientWidth = 213
+  ClientWidth = 138
   Color = clBtnFace
   Constraints.MinHeight = 250
   Constraints.MinWidth = 145
@@ -107,6 +106,7 @@ object Form1: TForm1
     0000000000000000000000000000000000000000000000000000000000000000
     0000000000000000000000000000}
   OldCreateOrder = False
+  Position = poDefault
   OnActivate = FormActivate
   OnCreate = FormCreate
   OnMouseDown = FormMouseDown
@@ -218,7 +218,7 @@ object Form1: TForm1
     end
   end
   object Button3: TButton
-    Left = 130
+    Left = 33
     Top = 226
     Width = 75
     Height = 25

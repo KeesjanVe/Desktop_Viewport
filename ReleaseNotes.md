@@ -1,6 +1,10 @@
+Version 2.0.0.0
+Changes:
+- Added command line parameters (-T x -L x -R x -B x -W x -H x)
+
 Version 1.0.0.0
 Changes:
-- borderless form
+- border-less form
 - form coordinates are shown and can be set
 The coordinates are relative to the client portion (viewport) of the form.
 E.g. when setting the top to '0', the 'viewport' will start at the top of the desktop.

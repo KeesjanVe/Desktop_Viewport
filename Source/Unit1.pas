@@ -56,7 +56,8 @@ type
 var
   Form1: TForm1;
   isDraging: boolean;
-X0, Y0: single;
+  X0, Y0: single;
+
 
 implementation
 
@@ -156,7 +157,8 @@ end;
 procedure TForm1.CreateParams(var Params: TCreateParams);
 begin
  BorderStyle := bsNone;
- inherited;
+ inherited  CreateParams(Params);
+     Params.ExStyle:= Params.ExStyle or WS_EX_APPWINDOW;
 // Params.ExStyle := Params.ExStyle or WS_EX_STATICEDGE;
 // Params.Style := Params.Style or WS_SIZEBOX;
 
@@ -309,6 +311,7 @@ begin
 
   for x := 0 to GroupBox1.ControlCount-1 do
     GroupBox1.controls[x].repaint;
+
 end;
 
 procedure TForm1.WMMove(var Message: TMessage);
@@ -318,6 +321,7 @@ begin
   RzNumericHeight.Value := clientheight-4;
   RzNumericLeft.Value := TWMMove(Message).XPos+2;
   RzNumericTop.Value := TWMMove(Message).YPos+2;
+
 end;
 
 procedure TForm1.Button2Click(Sender: TObject);
@@ -332,11 +336,71 @@ begin
   Button2.tag := 0;
   repaint;
   end;
+
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
+var
+  i: Integer;
+  T, L, R, B, W, H : integer;
+  Fault: String;
 begin
   Start := 0;
+  Self.top := (Screen.Height div 2) - 144;
+  T := Self.top;
+  Self.Left := (Screen.Width div 2) - 74;
+  L:= Self.Left;
+
+  W:= 146;
+  H:= 261;
+  R := Self.Left + 146;
+  B := Self.Top + 288;
+  for i := 1 to ParamCount do
+  begin
+    try
+      Fault := '-T';
+      if ParamStr(i) = '-T' then T := StrToInt(ParamStr(i+1));
+      Fault := '-L';
+      if ParamStr(i) = '-L' then L := StrToInt(ParamStr(i+1));
+      Fault := '-R';
+      if ParamStr(i) = '-R' then R := StrToInt(ParamStr(i+1));
+      Fault := '-B';
+      if ParamStr(i) = '-B' then B := StrToInt(ParamStr(i+1));
+      Fault := '-W';
+      if ParamStr(i) = '-W' then W := StrToInt(ParamStr(i+1));
+      Fault := '-H';
+      if ParamStr(i) = '-H' then H := StrToInt(ParamStr(i+1));
+    except
+    Begin
+      Showmessage('Wrong parameter value for parameter: '+Fault +' ' +ParamStr(i+1));
+      exit;
+    end;
+    end;
+  end;
+    try
+      if (T < 0) then Raise exception.create('Negative parameter value for parameter: -T '+IntToStr(T));
+      if (L < 0) then Raise exception.create('Negative parameter value for parameter: -L '+IntToStr(L));
+      if (R < 0) then Raise exception.create(Format('Negative parameter value for parameter: -R %d',[R]));
+      if (B < 0) then Raise exception.create(Format('Negative parameter value for parameter: -B %d',[B]));
+
+      if (W < 146) then Raise exception.create('Parameter value for parameter: -W '+IntToStr(W)+ 'is to small: min value = 146');
+      if (H < 261) then Raise exception.create('Parameter value for parameter: -H '+IntToStr(H)+ ' is to small: min value = 261');
+      if (R-L < 146) then Raise exception.create(Format('Parameter value for parameters: -R - -L (%d - %d < min width: 146)',[R, L]));
+      if (B-T < 261) then Raise exception.create(Format('Parameter value for parameters: -B - -T (%d - %d < min height: 261)',[B, T]));
+    except
+      raise;
+   end;
+   if FindCmdLineSwitch('T', ['-'], false) then Self.Top := T-2;
+   if FindCmdLineSwitch('L', ['-'], false) then Self.Left := L-2;
+
+   if FindCmdLineSwitch('R', ['-'], false) then Self.Width := (R - L) + 4;
+   if FindCmdLineSwitch('B', ['-'], false) then Self.Height := (B - T) +4;
+
+//   if FindCmdLineSwitch('W', ['-'], false) then Self.Width := W+4;
+//   if FindCmdLineSwitch('H', ['-'], false) then Self.Height := H+4;
+
+   if FindCmdLineSwitch('W', ['-'], false) then Self.ClientWidth := W;
+   if FindCmdLineSwitch('H', ['-'], false) then Self.ClientHeight := H;
 end;
 
 procedure TForm1.FormPaint(Sender: TObject);
@@ -351,7 +415,7 @@ begin
   RzNumericHeight.Value := clientheight-4;
   RzNumericLeft.Value := Form1.left+2;
   RzNumericTop.Value := Form1.Top+2;
-
 end;
+
 
 end.

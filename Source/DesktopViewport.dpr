@@ -6,6 +6,7 @@ uses
 
 {$R *.RES}
 
+
 begin
   Application.Initialize;
   Application.Title := 'Desktop Viewport';
