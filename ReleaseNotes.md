@@ -1,3 +1,8 @@
+Version 2.0.0.1
+Changes:
+- Removed command line check for negative values for Top, Left, Right and Bottom.
+  The check did not allow the command line use for displaying the viewport on non-primary monitors on the left or top.
+
 Version 2.0.0.0
 Changes:
 - Added command line parameters (-T x -L x -R x -B x -W x -H x)

@@ -378,11 +378,11 @@ begin
     end;
   end;
     try
-      if (T < 0) then Raise exception.create('Negative parameter value for parameter: -T '+IntToStr(T));
+{      if (T < 0) then Raise exception.create('Negative parameter value for parameter: -T '+IntToStr(T));
       if (L < 0) then Raise exception.create('Negative parameter value for parameter: -L '+IntToStr(L));
       if (R < 0) then Raise exception.create(Format('Negative parameter value for parameter: -R %d',[R]));
       if (B < 0) then Raise exception.create(Format('Negative parameter value for parameter: -B %d',[B]));
-
+}
       if (W < 146) then Raise exception.create('Parameter value for parameter: -W '+IntToStr(W)+ 'is to small: min value = 146');
       if (H < 261) then Raise exception.create('Parameter value for parameter: -H '+IntToStr(H)+ ' is to small: min value = 261');
       if (R-L < 146) then Raise exception.create(Format('Parameter value for parameters: -R - -L (%d - %d < min width: 146)',[R, L]));
@@ -396,11 +396,8 @@ begin
    if FindCmdLineSwitch('R', ['-'], false) then Self.Width := (R - L) + 4;
    if FindCmdLineSwitch('B', ['-'], false) then Self.Height := (B - T) +4;
 
-//   if FindCmdLineSwitch('W', ['-'], false) then Self.Width := W+4;
-//   if FindCmdLineSwitch('H', ['-'], false) then Self.Height := H+4;
-
-   if FindCmdLineSwitch('W', ['-'], false) then Self.ClientWidth := W;
-   if FindCmdLineSwitch('H', ['-'], false) then Self.ClientHeight := H;
+   if FindCmdLineSwitch('W', ['-'], false) then Self.Width := W+4;
+   if FindCmdLineSwitch('H', ['-'], false) then Self.Height := H+4;
 end;
 
 procedure TForm1.FormPaint(Sender: TObject);
