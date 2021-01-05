@@ -1,3 +1,7 @@
+Version 2.0.0.3 (01/05/2021)
+Changes:
+- Add command line parameter '-X' which initiate the creation of the view-port at start-up.
+
 Version 2.0.0.2
 Changes:
 - Removed command line parameters '-R' and '-B' due to incorrect results and a 'black' VCL screen.

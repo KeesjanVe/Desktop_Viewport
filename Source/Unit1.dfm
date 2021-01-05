@@ -227,4 +227,10 @@ object Form1: TForm1
     TabOrder = 2
     OnClick = Button3Click
   end
+  object Timer1: TTimer
+    Enabled = False
+    OnTimer = Timer1Timer
+    Left = 16
+    Top = 154
+  end
 end

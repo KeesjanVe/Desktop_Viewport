@@ -18,10 +18,12 @@ Left: 	-L x
 Width:	-W x
 Height:	-H x
 
+Execute: -X -> create view-port after start-up
+
 Default width = 140 pixels, Width can not be smaller than 140 pixels
 Default Height = 250 pixels, Height can not be smaller than 250 pixels
 The parameters and their calculation may not be entirely foolproof!
 
-Example: DesktopViewport.exe -T 0 -L 0 -W 1024 -H 768
+Example: DesktopViewport.exe -T 0 -L 0 -W 1024 -H 768 -X
 
 No licence what so ever! Application and Delphi 5 source code included (yes I am old, old, old school!).

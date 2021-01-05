@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, fcStatusBar, Mask, RzEdit, RzButton,ShellApi;
+  StdCtrls, fcStatusBar, Mask, RzEdit, RzButton,ShellApi, ExtCtrls;
 
 type
   TForm1 = class(TForm)
@@ -20,6 +20,7 @@ type
     RzNumericWidth: TRzNumericEdit;
     RzNumericHeight: TRzNumericEdit;
     Button3: TButton;
+    Timer1: TTimer;
     procedure Button1Click(Sender: TObject);
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -33,6 +34,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormPaint(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
   protected
     procedure CreateParams(var Params: TCreateParams); override;
  procedure WMNCHitTest(var Message: TWMNCHitTest); message WM_NCHITTEST;    
@@ -41,6 +43,7 @@ type
     screenleft, screenwidth,screenheight,screentop: integer;
     Start: Integer;
     Stop: Boolean;
+    AutoExec: integer;
     procedure WMNCPaint(var Msg: TWMNCPaint); message WM_NCPAINT;
     procedure FormFrame;
     procedure WMNCActivate(var Msg: TWMNCActivate); message WM_NCACTIVATE;
@@ -342,17 +345,19 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 var
   i: Integer;
-  T, L, W, H : integer;
+  T, L, W, H: integer;
   Fault: String;
 begin
   Start := 0;
-
+  AutoExec := 0;
+  
   Self.top := (Screen.Height div 2) - 125;
   T := Self.top;
   Self.Left := (Screen.Width div 2) - 73;
   L:= Self.Left;
   W := Self.Width;
   H := Self.Height;
+
   if ParamCount > 1 then
   begin
 
@@ -369,6 +374,8 @@ begin
         if ParamStr(i) = '-W' then W := StrToInt(ParamStr(i+1));
         Fault := '-H';
         if ParamStr(i) = '-H' then H := StrToInt(ParamStr(i+1));
+        Fault := '-X';
+        if ParamStr(i) = '-X' then AutoExec := 1;
       except
       Begin
         Showmessage('Wrong parameter value for parameter: '+Fault +' ' +ParamStr(i+1));
@@ -408,7 +415,18 @@ begin
   RzNumericHeight.Value := clientheight-4;
   RzNumericLeft.Value := Form1.left+2;
   RzNumericTop.Value := Form1.Top+2;
+  if (AutoExec =  1) then
+  begin
+    timer1.Enabled := True;
+    Form1.Enabled := False;
+  end;
 end;
 
+
+procedure TForm1.Timer1Timer(Sender: TObject);
+begin
+  timer1.Enabled := False;
+  Button1Click(Self);
+end;
 
 end.
